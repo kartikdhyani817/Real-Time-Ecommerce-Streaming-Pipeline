@@ -2,3 +2,4 @@ pandas
 pyarrow
 faker
 python-dotenv
+kafka-python
