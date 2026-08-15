@@ -3,21 +3,36 @@ from pathlib import Path
 
 from kafka import KafkaConsumer
 
+from scripts.event_validator import (
+    validate_event,
+)
+
 
 KAFKA_SERVER = "localhost:9092"
 
 TOPIC_NAME = "ecommerce-orders"
 
-GROUP_ID = "ecommerce-processing-group"
+GROUP_ID = "ecommerce-validation-group"
 
-OUTPUT_DIR = Path("data/processed")
 
-OUTPUT_FILE = OUTPUT_DIR / "consumed_events.jsonl"
+OUTPUT_DIR = Path(
+    "data/processed"
+)
+
+VALID_FILE = (
+    OUTPUT_DIR
+    / "valid_events.jsonl"
+)
+
+INVALID_FILE = (
+    OUTPUT_DIR
+    / "invalid_events.jsonl"
+)
 
 
 def create_consumer():
     """
-    Create and configure the Kafka consumer.
+    Create Kafka consumer.
     """
 
     consumer = KafkaConsumer(
@@ -31,17 +46,22 @@ def create_consumer():
 
         enable_auto_commit=True,
 
-        value_deserializer=lambda message: json.loads(
-            message.decode("utf-8")
+        value_deserializer=lambda message: (
+            json.loads(
+                message.decode("utf-8")
+            )
         ),
     )
 
     return consumer
 
 
-def save_event(event):
+def save_json_line(
+    file_path,
+    data,
+):
     """
-    Save consumed event locally as JSONL.
+    Append a JSON record to a JSONL file.
     """
 
     OUTPUT_DIR.mkdir(
@@ -49,36 +69,44 @@ def save_event(event):
         exist_ok=True,
     )
 
-    with OUTPUT_FILE.open(
+    with file_path.open(
         "a",
         encoding="utf-8",
     ) as file:
 
         file.write(
-            json.dumps(event)
+            json.dumps(
+                data,
+                ensure_ascii=False,
+            )
             + "\n"
         )
 
 
 def consume_events():
     """
-    Continuously consume e-commerce events from Kafka.
+    Consume, validate and route Kafka events.
     """
 
     print("=" * 65)
-    print("E-Commerce Kafka Consumer")
+    print(
+        "E-Commerce Kafka Validation Consumer"
+    )
     print("=" * 65)
 
     print(
-        f"\nKafka Server : {KAFKA_SERVER}"
+        f"\nKafka Server  : "
+        f"{KAFKA_SERVER}"
     )
 
     print(
-        f"Topic        : {TOPIC_NAME}"
+        f"Topic         : "
+        f"{TOPIC_NAME}"
     )
 
     print(
-        f"Consumer Group: {GROUP_ID}"
+        f"Consumer Group: "
+        f"{GROUP_ID}"
     )
 
     print(
@@ -87,73 +115,132 @@ def consume_events():
 
     consumer = create_consumer()
 
-    event_count = 0
+    total_events = 0
+    valid_events = 0
+    invalid_events = 0
 
     try:
 
         for message in consumer:
 
-            event_count += 1
+            total_events += 1
 
             event = message.value
+
+            is_valid, errors = (
+                validate_event(event)
+            )
 
             print("-" * 65)
 
             print(
-                f"EVENT #{event_count}"
+                f"EVENT #{total_events}"
             )
 
             print(
-                f"Order ID : "
-                f"{event.get('order_id')}"
-            )
-
-            print(
-                f"Product  : "
-                f"{event.get('product_name')}"
-            )
-
-            print(
-                f"Category : "
-                f"{event.get('category')}"
-            )
-
-            print(
-                f"Quantity : "
-                f"{event.get('quantity')}"
-            )
-
-            print(
-                f"Amount   : "
-                f"₹{event.get('total_amount', 0):,}"
-            )
-
-            print(
-                f"Payment  : "
-                f"{event.get('payment_method')}"
-            )
-
-            print(
-                f"Status   : "
-                f"{event.get('order_status')}"
-            )
-
-            print(
-                f"Partition: "
+                f"Partition : "
                 f"{message.partition}"
             )
 
             print(
-                f"Offset   : "
+                f"Offset    : "
                 f"{message.offset}"
             )
 
-            save_event(event)
+            # ---------------------------------
+            # VALID EVENT
+            # ---------------------------------
+
+            if is_valid:
+
+                valid_events += 1
+
+                save_json_line(
+                    VALID_FILE,
+                    event,
+                )
+
+                print(
+                    "Status    : VALID"
+                )
+
+                print(
+                    f"Order ID  : "
+                    f"{event.get('order_id')}"
+                )
+
+                print(
+                    f"Product   : "
+                    f"{event.get('product_name')}"
+                )
+
+                print(
+                    f"Amount    : "
+                    f"₹{event.get('total_amount', 0):,}"
+                )
+
+            # ---------------------------------
+            # INVALID EVENT
+            # ---------------------------------
+
+            else:
+
+                invalid_events += 1
+
+                invalid_record = {
+                    "event": event,
+                    "validation_errors": errors,
+                    "kafka_partition": (
+                        message.partition
+                    ),
+                    "kafka_offset": (
+                        message.offset
+                    ),
+                }
+
+                save_json_line(
+                    INVALID_FILE,
+                    invalid_record,
+                )
+
+                print(
+                    "Status    : INVALID"
+                )
+
+                print(
+                    "Validation Errors:"
+                )
+
+                for error in errors:
+
+                    print(
+                        f"  - {error}"
+                    )
+
+            # ---------------------------------
+            # STREAM SUMMARY
+            # ---------------------------------
+
+            print(
+                "\nStream Summary"
+            )
+
+            print(
+                f"Total   : {total_events}"
+            )
+
+            print(
+                f"Valid   : {valid_events}"
+            )
+
+            print(
+                f"Invalid : {invalid_events}"
+            )
 
     except KeyboardInterrupt:
 
         print(
-            "\n\nConsumer stopped by user."
+            "\nConsumer stopped by user."
         )
 
     except Exception as error:
@@ -169,7 +256,7 @@ def consume_events():
         consumer.close()
 
         print(
-            "Kafka consumer closed."
+            "\nKafka consumer closed."
         )
 
 
