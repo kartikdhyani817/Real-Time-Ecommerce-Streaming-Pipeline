@@ -3,3 +3,4 @@ pyarrow
 faker
 python-dotenv
 kafka-python
+duckdb
