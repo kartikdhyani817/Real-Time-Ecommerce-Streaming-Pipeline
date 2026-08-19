@@ -4,3 +4,4 @@ faker
 python-dotenv
 kafka-python
 duckdb
+streamlit
