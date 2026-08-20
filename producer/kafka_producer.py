@@ -4,54 +4,90 @@ import time
 from kafka import KafkaProducer
 
 from producer.event_generator import generate_event
+from utils.logger import setup_logger
 
+
+# ============================================================
+# CONFIGURATION
+# ============================================================
 
 KAFKA_SERVER = "localhost:9092"
-
 TOPIC_NAME = "ecommerce-orders"
 
+NUMBER_OF_EVENTS = 10
+EVENT_DELAY = 1
+
+
+# ============================================================
+# LOGGER
+# ============================================================
+
+logger = setup_logger(
+    "KafkaProducer"
+)
+
+
+# ============================================================
+# CREATE KAFKA PRODUCER
+# ============================================================
 
 def create_producer():
+    """
+    Create and return Kafka producer.
+    """
 
-    producer = KafkaProducer(
+    return KafkaProducer(
         bootstrap_servers=KAFKA_SERVER,
 
-        value_serializer=lambda value: json.dumps(
-            value
-        ).encode("utf-8"),
-
-        acks="all",
-
-        retries=3,
+        value_serializer=lambda value: (
+            json.dumps(value)
+            .encode("utf-8")
+        ),
     )
 
-    return producer
 
+# ============================================================
+# PRODUCE EVENTS
+# ============================================================
 
-def stream_events(
-    total_events=20,
-    delay_seconds=1,
-):
+def produce_events():
+    """
+    Generate e-commerce events and publish them to Kafka.
+    """
 
-    print("=" * 60)
+    print("=" * 65)
     print("E-Commerce Kafka Producer")
-    print("=" * 60)
+    print("=" * 65)
 
     print(
-        f"\nConnecting to Kafka: {KAFKA_SERVER}"
+        f"\nKafka Server : {KAFKA_SERVER}"
     )
 
     print(
-        f"Topic: {TOPIC_NAME}\n"
+        f"Topic        : {TOPIC_NAME}"
     )
 
-    producer = create_producer()
+    print(
+        f"Events       : {NUMBER_OF_EVENTS}"
+    )
+
+    print(
+        "\nStarting producer...\n"
+    )
+
+    logger.info(
+        "Kafka producer started."
+    )
+
+    producer = None
 
     try:
 
+        producer = create_producer()
+
         for event_number in range(
             1,
-            total_events + 1,
+            NUMBER_OF_EVENTS + 1,
         ):
 
             event = generate_event()
@@ -65,24 +101,89 @@ def stream_events(
                 timeout=10
             )
 
+            print("-" * 65)
+
             print(
-                f"[{event_number}/{total_events}] "
-                f"SENT | "
-                f"{event['order_id']} | "
-                f"{event['product_name']} | "
-                f"₹{event['total_amount']:,} | "
-                f"Partition: {metadata.partition} | "
-                f"Offset: {metadata.offset}"
+                f"EVENT #{event_number}"
+            )
+
+            print(
+                f"Event ID  : "
+                f"{event.get('event_id')}"
+            )
+
+            print(
+                f"Order ID  : "
+                f"{event.get('order_id')}"
+            )
+
+            print(
+                f"Product   : "
+                f"{event.get('product_name')}"
+            )
+
+            print(
+                f"Category  : "
+                f"{event.get('category')}"
+            )
+
+            print(
+                f"Quantity  : "
+                f"{event.get('quantity')}"
+            )
+
+            print(
+                f"Amount    : "
+                f"₹{event.get('total_amount', 0):,}"
+            )
+
+            print(
+                f"Payment   : "
+                f"{event.get('payment_method')}"
+            )
+
+            print(
+                f"Partition : "
+                f"{metadata.partition}"
+            )
+
+            print(
+                f"Offset    : "
+                f"{metadata.offset}"
+            )
+
+            logger.info(
+                f"Event published | "
+                f"event_id={event.get('event_id')} | "
+                f"order_id={event.get('order_id')} | "
+                f"topic={TOPIC_NAME} | "
+                f"partition={metadata.partition} | "
+                f"offset={metadata.offset}"
             )
 
             time.sleep(
-                delay_seconds
+                EVENT_DELAY
             )
+
+        producer.flush()
+
+        print(
+            "\nAll events published successfully."
+        )
+
+        logger.info(
+            f"Kafka producer finished successfully | "
+            f"events_published={NUMBER_OF_EVENTS}"
+        )
 
     except KeyboardInterrupt:
 
         print(
             "\nProducer stopped by user."
+        )
+
+        logger.info(
+            "Kafka producer stopped by user."
         )
 
     except Exception as error:
@@ -91,22 +192,27 @@ def stream_events(
             f"\nProducer failed: {error}"
         )
 
+        logger.exception(
+            f"Producer failed: {error}"
+        )
+
         raise
 
     finally:
 
-        producer.flush()
+        if producer is not None:
 
-        producer.close()
+            producer.close()
 
-        print(
-            "\nKafka producer closed."
-        )
+            logger.info(
+                "Kafka producer connection closed."
+            )
 
+
+# ============================================================
+# MAIN
+# ============================================================
 
 if __name__ == "__main__":
 
-    stream_events(
-        total_events=20,
-        delay_seconds=1,
-    )
+    produce_events()
