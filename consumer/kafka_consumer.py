@@ -5,7 +5,12 @@ from kafka import KafkaConsumer
 
 from scripts.event_validator import validate_event
 from scripts.parquet_writer import save_event_to_parquet
+from utils.logger import setup_logger
 
+
+logger = setup_logger(
+    "KafkaConsumer"
+)
 
 KAFKA_SERVER = "localhost:9092"
 TOPIC_NAME = "ecommerce-orders"
@@ -50,6 +55,9 @@ def save_json_line(file_path, data):
 
 
 def consume_events():
+    logger.info(
+        "Kafka consumer started."
+    )
     print("=" * 65)
     print("E-Commerce Kafka Validation Consumer")
     print("=" * 65)
@@ -90,6 +98,14 @@ def consume_events():
                 # Save valid event as Parquet
                 parquet_file = save_event_to_parquet(
                     event
+                )
+                logger.info(
+                    f"Valid event processed | "
+                    f"order_id={event.get('order_id')} | "
+                    f"event_id={event.get('event_id')} | "
+                    f"amount={event.get('total_amount')} | "
+                    f"partition={message.partition} | "
+                    f"offset={message.offset}"
                 )
 
                 print("Status    : VALID")
@@ -136,6 +152,13 @@ def consume_events():
                     INVALID_FILE,
                     invalid_record,
                 )
+                logger.warning(
+                    f"Invalid event detected | "
+                    f"event_id={event.get('event_id')} | "
+                    f"errors={errors} | "
+                    f"partition={message.partition} | "
+                    f"offset={message.offset}"
+                )
 
                 print("Status    : INVALID")
                 print("Validation Errors:")
@@ -150,8 +173,16 @@ def consume_events():
 
     except KeyboardInterrupt:
         print("\nConsumer stopped by user.")
+        logger.info(
+            "Kafka consumer stopped by user."
+        )
 
     except Exception as error:
+
+        logger.exception(
+            f"Consumer failed: {error}"
+        )
+
         print(
             f"\nConsumer failed: {error}"
         )
@@ -160,6 +191,9 @@ def consume_events():
     finally:
         consumer.close()
         print("\nKafka consumer closed.")
+        logger.info(
+            "Kafka consumer connection closed."
+        )
 
 
 if __name__ == "__main__":
