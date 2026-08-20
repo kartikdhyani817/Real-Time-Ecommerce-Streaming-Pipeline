@@ -1,0 +1,40 @@
+2026-08-20 17:45:44,118 | INFO | LoggingTest | Pipeline logging system started.
+2026-08-20 17:45:44,119 | WARNING | LoggingTest | This is a test warning.
+2026-08-20 17:45:44,119 | ERROR | LoggingTest | This is a test error.
+2026-08-20 18:09:05,171 | INFO | HealthMonitor | Health check completed | parquet=HEALTHY | duckdb=HEALTHY | events=60
+2026-08-20 18:19:12,534 | INFO | KafkaConsumer | Kafka consumer started.
+2026-08-20 18:19:50,322 | INFO | KafkaProducer | Kafka producer started.
+2026-08-20 18:19:50,743 | INFO | KafkaProducer | Event published | event_id=fc5c6861-d78c-4787-a27b-431f122e1cd3 | order_id=ORD-E5F89DF975 | topic=ecommerce-orders | partition=0 | offset=141
+2026-08-20 18:19:51,782 | INFO | KafkaProducer | Event published | event_id=d022acec-167c-487a-b67a-1955024765d4 | order_id=ORD-473BABCEE2 | topic=ecommerce-orders | partition=0 | offset=142
+2026-08-20 18:19:52,798 | INFO | KafkaProducer | Event published | event_id=7c6fc2ee-beaf-45ae-ba57-4379f88e5731 | order_id=ORD-1EE1CF82BD | topic=ecommerce-orders | partition=0 | offset=143
+2026-08-20 18:19:53,812 | INFO | KafkaProducer | Event published | event_id=eebd72d8-763c-4b6f-a60e-f6596137c46a | order_id=ORD-5D98618E22 | topic=ecommerce-orders | partition=0 | offset=144
+2026-08-20 18:19:54,830 | INFO | KafkaProducer | Event published | event_id=5f607798-dca3-4b20-ba76-bb0fc457ca7d | order_id=ORD-99F262D43B | topic=ecommerce-orders | partition=0 | offset=145
+2026-08-20 18:19:55,283 | INFO | ParquetWriter | Parquet event stored | event_id=fc5c6861-d78c-4787-a27b-431f122e1cd3 | path=data\parquet\year=2026\month=08\day=20\fc5c6861-d78c-4787-a27b-431f122e1cd3.parquet
+2026-08-20 18:19:55,284 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-E5F89DF975 | event_id=fc5c6861-d78c-4787-a27b-431f122e1cd3 | amount=35000 | partition=0 | offset=141
+2026-08-20 18:19:55,302 | INFO | ParquetWriter | Parquet event stored | event_id=d022acec-167c-487a-b67a-1955024765d4 | path=data\parquet\year=2026\month=08\day=20\d022acec-167c-487a-b67a-1955024765d4.parquet
+2026-08-20 18:19:55,302 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-473BABCEE2 | event_id=d022acec-167c-487a-b67a-1955024765d4 | amount=300000 | partition=0 | offset=142
+2026-08-20 18:19:55,318 | INFO | ParquetWriter | Parquet event stored | event_id=7c6fc2ee-beaf-45ae-ba57-4379f88e5731 | path=data\parquet\year=2026\month=08\day=20\7c6fc2ee-beaf-45ae-ba57-4379f88e5731.parquet
+2026-08-20 18:19:55,318 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-1EE1CF82BD | event_id=7c6fc2ee-beaf-45ae-ba57-4379f88e5731 | amount=22500 | partition=0 | offset=143
+2026-08-20 18:19:55,341 | INFO | ParquetWriter | Parquet event stored | event_id=eebd72d8-763c-4b6f-a60e-f6596137c46a | path=data\parquet\year=2026\month=08\day=20\eebd72d8-763c-4b6f-a60e-f6596137c46a.parquet
+2026-08-20 18:19:55,344 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-5D98618E22 | event_id=eebd72d8-763c-4b6f-a60e-f6596137c46a | amount=7000 | partition=0 | offset=144
+2026-08-20 18:19:55,385 | INFO | ParquetWriter | Parquet event stored | event_id=5f607798-dca3-4b20-ba76-bb0fc457ca7d | path=data\parquet\year=2026\month=08\day=20\5f607798-dca3-4b20-ba76-bb0fc457ca7d.parquet
+2026-08-20 18:19:55,386 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-99F262D43B | event_id=5f607798-dca3-4b20-ba76-bb0fc457ca7d | amount=2500 | partition=0 | offset=145
+2026-08-20 18:19:55,841 | INFO | KafkaProducer | Event published | event_id=a865be17-17e1-4580-bee8-53466f29161c | order_id=ORD-69134421B8 | topic=ecommerce-orders | partition=0 | offset=146
+2026-08-20 18:19:55,866 | INFO | ParquetWriter | Parquet event stored | event_id=a865be17-17e1-4580-bee8-53466f29161c | path=data\parquet\year=2026\month=08\day=20\a865be17-17e1-4580-bee8-53466f29161c.parquet
+2026-08-20 18:19:55,866 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-69134421B8 | event_id=a865be17-17e1-4580-bee8-53466f29161c | amount=75000 | partition=0 | offset=146
+2026-08-20 18:19:56,936 | INFO | KafkaProducer | Event published | event_id=5ac8cca9-5109-4315-942e-a88b23302848 | order_id=ORD-CA4D223687 | topic=ecommerce-orders | partition=0 | offset=147
+2026-08-20 18:19:56,962 | INFO | ParquetWriter | Parquet event stored | event_id=5ac8cca9-5109-4315-942e-a88b23302848 | path=data\parquet\year=2026\month=08\day=20\5ac8cca9-5109-4315-942e-a88b23302848.parquet
+2026-08-20 18:19:56,962 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-CA4D223687 | event_id=5ac8cca9-5109-4315-942e-a88b23302848 | amount=45000 | partition=0 | offset=147
+2026-08-20 18:19:57,944 | INFO | KafkaProducer | Event published | event_id=dc1a8c78-57db-4844-8f74-7aa2495d6845 | order_id=ORD-3BD2C0708C | topic=ecommerce-orders | partition=0 | offset=148
+2026-08-20 18:19:57,960 | INFO | ParquetWriter | Parquet event stored | event_id=dc1a8c78-57db-4844-8f74-7aa2495d6845 | path=data\parquet\year=2026\month=08\day=20\dc1a8c78-57db-4844-8f74-7aa2495d6845.parquet
+2026-08-20 18:19:57,961 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-3BD2C0708C | event_id=dc1a8c78-57db-4844-8f74-7aa2495d6845 | amount=10000 | partition=0 | offset=148
+2026-08-20 18:19:58,963 | INFO | KafkaProducer | Event published | event_id=b80763fe-2fc6-4667-90dd-814764733e97 | order_id=ORD-CBE4B3D216 | topic=ecommerce-orders | partition=0 | offset=149
+2026-08-20 18:19:59,001 | INFO | ParquetWriter | Parquet event stored | event_id=b80763fe-2fc6-4667-90dd-814764733e97 | path=data\parquet\year=2026\month=08\day=20\b80763fe-2fc6-4667-90dd-814764733e97.parquet
+2026-08-20 18:19:59,002 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-CBE4B3D216 | event_id=b80763fe-2fc6-4667-90dd-814764733e97 | amount=36000 | partition=0 | offset=149
+2026-08-20 18:19:59,971 | INFO | KafkaProducer | Event published | event_id=fd101aa7-c60c-4333-af87-3a7aee686739 | order_id=ORD-630092DA49 | topic=ecommerce-orders | partition=0 | offset=150
+2026-08-20 18:19:59,988 | INFO | ParquetWriter | Parquet event stored | event_id=fd101aa7-c60c-4333-af87-3a7aee686739 | path=data\parquet\year=2026\month=08\day=20\fd101aa7-c60c-4333-af87-3a7aee686739.parquet
+2026-08-20 18:19:59,989 | INFO | KafkaConsumer | Valid event processed | order_id=ORD-630092DA49 | event_id=fd101aa7-c60c-4333-af87-3a7aee686739 | amount=75000 | partition=0 | offset=150
+2026-08-20 18:20:00,973 | INFO | KafkaProducer | Kafka producer finished successfully | events_published=10
+2026-08-20 18:20:00,977 | INFO | KafkaProducer | Kafka producer connection closed.
+2026-08-20 18:21:22,505 | INFO | HealthMonitor | Health check completed | parquet=HEALTHY | duckdb=HEALTHY | events=70
+2026-08-20 18:21:58,761 | WARNING | KafkaConsumer | Invalid event detected | event_id=INVALID-001 | errors=['Quantity must be greater than 0.', 'Total amount does not match quantity × unit price.', 'Invalid order status: BROKEN', 'Invalid event timestamp.'] | partition=0 | offset=151
