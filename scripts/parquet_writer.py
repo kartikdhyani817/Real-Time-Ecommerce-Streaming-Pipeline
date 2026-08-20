@@ -1,7 +1,12 @@
 from datetime import datetime
 from pathlib import Path
-
 import pandas as pd
+from utils.logger import setup_logger
+
+
+logger = setup_logger(
+    "ParquetWriter"
+)
 
 
 PARQUET_ROOT = Path(
@@ -53,5 +58,11 @@ def save_event_to_parquet(event):
         index=False,
         engine="pyarrow",
     )
+    logger.info(
+        f"Parquet event stored | "
+        f"event_id={event_id} | "
+        f"path={output_file}"
+    )
+    
 
     return output_file
