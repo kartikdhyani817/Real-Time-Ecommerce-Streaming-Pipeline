@@ -5,3 +5,4 @@ python-dotenv
 kafka-python
 duckdb
 streamlit
+pytest
