@@ -1,0 +1,28 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\HP\AppData\Local\Programs\Python\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\HP\Desktop\Ecommerce Pipeline
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.14.1, Faker-40.36.0, langsmith-0.9.7
+collecting ... collected 17 items
+
+tests/test_analytics.py::test_duckdb_total_orders PASSED                 [  5%]
+tests/test_analytics.py::test_duckdb_total_revenue PASSED                [ 11%]
+tests/test_analytics.py::test_top_product PASSED                         [ 17%]
+tests/test_event_generator.py::test_generate_event_returns_dict PASSED   [ 23%]
+tests/test_event_generator.py::test_required_event_fields_exist PASSED   [ 29%]
+tests/test_event_generator.py::test_total_amount_calculation PASSED      [ 35%]
+tests/test_event_generator.py::test_quantity_is_positive PASSED          [ 41%]
+tests/test_event_generator.py::test_price_is_positive PASSED             [ 47%]
+tests/test_event_validator.py::test_valid_event_passes PASSED            [ 52%]
+tests/test_event_validator.py::test_negative_quantity_fails PASSED       [ 58%]
+tests/test_event_validator.py::test_missing_field_fails PASSED           [ 64%]
+tests/test_event_validator.py::test_invalid_status_fails PASSED          [ 70%]
+tests/test_event_validator.py::test_wrong_total_amount_fails PASSED      [ 76%]
+tests/test_event_validator.py::test_invalid_timestamp_fails PASSED       [ 82%]
+tests/test_parquet_writer.py::test_parquet_file_created PASSED           [ 88%]
+tests/test_parquet_writer.py::test_parquet_file_readable PASSED          [ 94%]
+tests/test_parquet_writer.py::test_date_partition_created PASSED         [100%]
+
+============================= 17 passed in 1.11s ==============================
